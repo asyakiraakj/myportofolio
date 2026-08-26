@@ -1,4 +1,4 @@
-Nama : Khadijah Asy Syakira
+Nama : Syakira
 
 NPM : 2506610595
 
