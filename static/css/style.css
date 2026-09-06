@@ -176,6 +176,54 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
+/* EXPERIENCE SECTION */
+.experience-grid {
+    display: grid;
+    grid-template-rows: 0.1fr 0.9fr;
+    gap: 32px;
+    grid-template-areas: 
+    "title"
+    "items";
+}
+
+.experience-grid h3 {
+    grid-area: title;
+}
+
+.experience-grid .experience-item-grid {
+    grid-area: items;
+}
+
+.experience-item-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: "subtitle details paragraphs";
+}
+
+.experience-items-grid .experience-subtitle {
+    grid-area: subtitle;
+}
+.experience-items-grid .experience-details {
+    grid-area: details;
+}
+.experience-items-grid .experience-paragraphs {
+    grid-area: paragraphs;
+}
+
+.experience-details {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    grid-template-areas: "property item";
+}
+.experience-details .experience-details-properties {
+    grid-area: property;
+}
+.experience-details .experience-details-items {
+    grid-area: item;
+}
+
+
+
 @media (max-width: 600px) {
     .hero-grid {
         grid-template-columns: 1fr;
