@@ -179,8 +179,8 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
-/* EXPERIENCE SECTION */
-.experience-grid {
+/* EDUCATION SECTION */
+.education-grid {
     display: grid;
     grid-template-rows: 0.1fr 0.9fr;
     gap: 0px;
@@ -193,55 +193,55 @@ h1, .brand {
     background-color: var(--card-light);
 }
 
-#experience h2 {
+#education h2 {
     font-size: 42px;
     font-family: "Space Grotesk", -apple-system, sans-serif;;
 }
 
-#experience .container > hr {
+#education .container > hr {
     color: var(--separator);
 }
 
-.experience-grid h3 {
+.education-grid h3 {
     grid-area: title;
     font-size: 24px;
     font-weight: 600;
     color: var(--accent-dark);
 }
 
-.experience-grid .experience-item-grid {
+.education-grid .education-item-grid {
     grid-area: items;
 }
 
-.experience-item-grid {
+.education-item-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto 1fr;
     grid-template-areas: 
-    "subtitle paragraphs"
+    "year year"
     "details paragraphs";
     margin-top: 0.3rem;
     gap: 1rem 2rem;
 }
 
-.experience-item-grid .experience-subtitle {
-    grid-area: subtitle;
+.education-item-grid .education-year {
+    grid-area: year;
     padding: 0rem;
 }
-.experience-item-grid .experience-details {
+.education-item-grid .education-details {
     grid-area: details;
 }
-.experience-item-grid .experience-paragraphs {
+.education-item-grid .education-paragraphs {
     grid-area: paragraphs;
 }
-.experience-item-grid .experience-subtitle p {
+.education-item-grid .education-year p {
     font-size: 12px;
     text-align: justify;
     line-height: 125%;
     padding-bottom: 0.5rem;
 }
 
-.experience-details {
+.education-details {
     display: inline-flex;
     flex-direction: column;
     justify-content: first-baseline;
@@ -252,7 +252,7 @@ h1, .brand {
     padding-left: 0rem;
 }
 
-.experience-details .experience-details-item {
+.education-details .education-details-item {
     display: flex;
     justify-content: space-between;
     /* padding: 0rem 1rem; */
@@ -262,28 +262,28 @@ h1, .brand {
     font-size: 14px;
 }
 
-.experience-details .experience-details-item .experience-details-property {
+.education-details .education-details-item .education-details-property {
     text-align: left;
 }
-.experience-details .experience-details-item .experience-details-value {
+.education-details .education-details-item .education-details-value {
     text-align: right;
     font-weight: 600;
 }
-.experience-details .experience-details-item a.experience-details-value {
+.education-details .education-details-item a.education-details-value {
     padding: 0px;
     margin: 0px;
 }
 
-.experience-item-grid .experience-paragraphs {
+.education-item-grid .education-paragraphs {
     font-size: 12px;
     letter-spacing: -0.1px;
     line-height: 150%;
     text-align: justify;
 }
-.experience-item-grid .experience-paragraphs p {
+.education-item-grid .education-paragraphs p {
     padding: 8px 0px;
 }
-.experience-item-grid .experience-paragraphs p:first-child {
+.education-item-grid .education-paragraphs p:first-child {
     padding: 0px 0px 12px;
 }
 
@@ -308,22 +308,22 @@ a {
         justify-content: flex-start;
     }
 
-    .experience-item-grid {
+    .education-item-grid {
         grid-template-columns: 1fr;
         grid-template-areas: 
-        "subtitle"
+        "year"
         "details"
         "paragraphs";
     }
-    .experience-item-grid > * {
+    .education-item-grid > * {
         padding: 0.75rem 0rem;
     }
 
-    .experience-details .experience-details-item {
+    .education-details .education-details-item {
         padding: 0.125rem 0rem;
     }
 
-    .experience-subtitle {
+    .education-year {
         padding-top: 0px;
     }
 }
