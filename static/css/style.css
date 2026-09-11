@@ -291,6 +291,24 @@ a {
     color: var(--text-link);
 }
 
+/* SKILLS PAGE ================================================================== */
+.skills-grid {
+    display: grid;
+    grid-template-columns: "hard" "soft";
+}
+
+.skills-grid > * {
+    background-color: var(--card-light);
+    padding: 1rem;
+}
+
+.hard-skills {
+    grid-area: hard;
+}
+.soft-skills {
+    grid-area: soft;
+}
+
 @media (max-width: 600px) {
     .hero-grid {
         grid-template-columns: 1fr;

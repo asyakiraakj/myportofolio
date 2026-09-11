@@ -22,34 +22,34 @@
     </header>
 
     <main>
-    <section class="experience-section" id="experience">
+    <section class="skills-section" id="skills">
         <div class="container">
-            <p class="section-kicker">Perjalanan saya sejauh ini</p>
-            <h1>Experience</h1>
-
-            <div class="experience-grid">
-                {% for experience in experience_list %}
-                    <article class="experience-card">
-                        <span class="experience-category">
-                            {{ experience.get_category_display }}
-                        </span>
-                        <h2>{{ experience.title }}</h2>
-                        <p class="experience-description">
-                            {{ experience.description }}
-                        </p>
-
-                        {% if experience.is_ongoing %}
-                            <p class="experience-status">Sedang berlangsung</p>
-                        {% else %}
-                            <p class="experience-status">Selesai</p>
-                        {% endif %}
-                    </article>
-                {% empty %}
-                    <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
-                    </p>
-                {% endfor %}
+            <p class="skills-kicker">My Skills</p>
+            <h1>Skills</h1>
+            
+            <div class="skills-grid">
+                <div class="hard-skills">
+                    <h2>Hard Skills</h2>
+                        { % for skill in hard_skills % }
+                        <div class="skill-card">
+                            <h3>{{ skill.name }}</h3>
+                            <p class="skill-cat">{{ skill.category }}</p>
+                            <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
+                        </div>
+                        { % empty % }
+                            <p>Belum ada skill yang ditambahkan</p>
+                        { % endfor % }
+                </div>
+                <div class="soft-skills">
+                    <h2>Soft Skills</h2>
+                    {{ % for skill in soft_skills % }}
+                        <div class="skill-card">
+                            <h3>{{ skill.name }}</h3>
+                            <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
+                        </div>
+                </div>
             </div>
+
         </div>
     </section>
     </main>
