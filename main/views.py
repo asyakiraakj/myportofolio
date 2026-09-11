@@ -28,8 +28,12 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 def show_skills(request):
+    hard_skills = Skills.objects.filter(type='hard')
+    soft_skills = Skills.objects.filter(type='soft')
+
     context = {
-        "skills": Skills.objects.all()
+        "hard_skills": hard_skills,
+        "soft_skills": soft_skills
     }
 
     return render(request, "skills.html", context)
