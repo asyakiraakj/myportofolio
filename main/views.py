@@ -32,6 +32,7 @@ def show_skills(request):
     soft_skills = Skills.objects.filter(type='soft')
 
     context = {
+        "name": "Syakira",
         "hard_skills": hard_skills,
         "soft_skills": soft_skills
     }
