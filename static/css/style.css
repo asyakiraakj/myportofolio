@@ -294,7 +294,8 @@ a {
 /* SKILLS PAGE ================================================================== */
 .skills-grid {
     display: grid;
-    grid-template-columns: "hard" "soft";
+    grid-template-areas: "hard soft";
+    grid-template-columns: 1fr 1fr;
 }
 
 .skills-grid > * {

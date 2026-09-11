@@ -30,23 +30,26 @@
             <div class="skills-grid">
                 <div class="hard-skills">
                     <h2>Hard Skills</h2>
-                        { % for skill in hard_skills % }
-                        <div class="skill-card">
-                            <h3>{{ skill.name }}</h3>
-                            <p class="skill-cat">{{ skill.category }}</p>
-                            <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
-                        </div>
-                        { % empty % }
+                        {% for skill in hard_skills %}
+                            <div class="skill-card">
+                                <h3>{{ skill.name }}</h3>
+                                <p class="skill-cat">{{ skill.category }}</p>
+                                <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
+                            </div>
+                        {% empty %}
                             <p>Belum ada skill yang ditambahkan</p>
-                        { % endfor % }
+                        {% endfor %}
                 </div>
                 <div class="soft-skills">
                     <h2>Soft Skills</h2>
-                    {{ % for skill in soft_skills % }}
-                        <div class="skill-card">
-                            <h3>{{ skill.name }}</h3>
-                            <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
-                        </div>
+                        {% for skill in soft_skills %}
+                            <div class="skill-card">
+                                <h3>{{ skill.name }}</h3>
+                                <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
+                            </div>
+                        {% empty %}
+                            <p>Belum ada skill yang ditambahkan</p>
+                        {% endfor %}
                 </div>
             </div>
 
