@@ -313,11 +313,10 @@ a {
     color: var(--separator);
 }
 
-.skills-section-grid {
+.skills-container-grid {
     display: grid;
     grid-template-areas: "hard soft";
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
 
     padding-top: 1rem;
 }
@@ -334,10 +333,9 @@ a {
 
 .skills-group { /* Hard/Soft Skill Container */
     display: grid;
-    grid-template-rows: 0.1fr 0.9fr;
+    grid-template-rows: auto 1fr;
 }
 
-.skills-group h1,
 .skills-group h2 {
     font-family: "Space Grotesk", -apple-system, sans-serif;
     margin-bottom: 0.2rem;
@@ -345,7 +343,7 @@ a {
 
 .skills-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 .empty-state {
     color: var(--text-muted);
@@ -354,7 +352,6 @@ a {
 .skill-card {
     display: flex;
     flex-direction: column;
-    justify-content: first-baseline;
     gap: 6px;
     align-items: flex-start;
 
@@ -362,8 +359,8 @@ a {
     border-radius: 0;
 
     padding: 0.5rem 0.8rem;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
 }
 
 .skill-card h3 { /* skill name/title */
@@ -374,7 +371,6 @@ a {
 .skill-card-details {
     display: flex;
     flex-direction: column;
-    justify-content: first-baseline;
     align-items: flex-start;
     gap: 2px;
 }
