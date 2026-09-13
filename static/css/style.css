@@ -432,6 +432,15 @@ a {
     .education-year {
         padding-top: 0px;
     }
+
+    .skills-container-grid {
+        display: grid;
+        grid-template-areas: 
+        "hard"
+        "soft";
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: none;
+    }
 }
 
 .experience-section {
