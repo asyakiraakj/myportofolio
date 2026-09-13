@@ -28,9 +28,9 @@
             <h1>Skills</h1>
             <hr>
             <div class="skills-container-grid">
-                <div class="skills-type hard-skills">
+                <div class="skills-group hard-skills">
                     <h2>Hard Skills</h2>
-                    <div class="skills-contents">
+                    <div class="skill-cards-grid">
                         {% for skill in hard_skills %}
                             <div class="skill-card">
                                 <h3>{{ skill.name }}</h3>
@@ -45,9 +45,9 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="skills-type soft-skills">
+                <div class="skills-group soft-skills">
                     <h2>Soft Skills</h2>
-                    <div class="skills-contents">
+                    <div class="skill-cards-grid">
                         {% for skill in soft_skills %}
                             <div class="skill-card">
                                 <h3>{{ skill.name }}</h3>

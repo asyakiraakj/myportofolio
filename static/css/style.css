@@ -313,7 +313,7 @@ a {
     color: var(--separator);
 }
 
-.skills-container-grid {
+.skills-section-grid {
     display: grid;
     grid-template-areas: "hard soft";
     grid-template-columns: 1fr 1fr;
@@ -328,22 +328,22 @@ a {
     grid-area: soft;
 }
 
-.skills-container-grid h2 { /* Hard/Soft Heading */
+.skills-section-grid h2 { /* Hard/Soft Heading */
     padding: 0;
 }
 
-.skills-type { /* Hard/Soft Skill Container */
+.skills-group { /* Hard/Soft Skill Container */
     display: grid;
     grid-template-rows: 0.1fr 0.9fr;
 }
 
-.skills-type h1,
-.skills-type h2 {
+.skills-group h1,
+.skills-group h2 {
     font-family: "Space Grotesk", -apple-system, sans-serif;
     margin-bottom: 0.2rem;
 }
 
-.skills-contents {
+.skills-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
