@@ -28,4 +28,4 @@ Saya menggunakan bantuan generative AI yaitu Gemini dan Github untuk hal-hal seb
     - menanyakan penyebab error/bug: hard skills tidak dapat ditampilkan: [Copilot](https://drive.google.com/file/d/1_hy4obdOcOQjk4TfjTlYeCfD5zw5XNjV/view?usp=sharing) [Gemini](https://share.gemini.google/feMBJMqdnu5c)
     - [menanyakan penyebab gap di bawah heading soft skills](https://drive.google.com/file/d/17sE_m8cvdkKkgIB8CxP9LkpxRj4rF2JQ/view?usp=sharing)
 - [bertanya bagaimana cara *update* object di django models.](https://share.gemini.google/FKoXm6pgSmWl)
-- [meminta membuatkan to-do list detail dengan estimasi waktu untuk tugas 2, meminta saran terkait pemisahan/kategorisasi skill](https://share.gemini.google/lx4jBmD5XRsU)
+- [meminta membuatkan to-do list detail dengan estimasi waktu untuk tugas 2, meminta saran terkait pemisahan/kategorisasi skill, update/delete object di django models](https://share.gemini.google/lx4jBmD5XRsU)
