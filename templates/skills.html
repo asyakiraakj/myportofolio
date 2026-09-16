@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+{% block meta %}
     <title>Skills - {{ name }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
-</head>
+{% endblock meta %}
+
 <body>
     <header class="site-header">
         <div class="container">
@@ -20,12 +18,20 @@
             </nav>
         </div>
     </header>
-
+    
+    {% block content %}
     <main>
     <section class="skills-section" id="skills">
         <div class="container">
             <p class="skills-kicker">My Skills</p>
-            <h1>Skills</h1>
+            <div class="skills-header">
+                <h1>Skills</h1>
+                <a href="{% url 'main:create_skill' %}" class="button skill-add-button"><span aria-hidden="true">+</span>Tambah Skill</a>
+            </div>
+            <form action="{% url 'main:show_skills' %}" method="get" class="skills-search">
+                <input type="search" name="name" value="{{ name_query }}" placeholder="Cari berdasarkan nama skill" class="skills-search__input" aria-label="Cari berdasarkan nama skill">
+                <button type="submit" class="button">Cari</button>
+            </form>
             <hr>
             <div class="skills-container-grid">
                 <div class="skills-group hard-skills">
@@ -66,6 +72,7 @@
         </div>
     </section>
     </main>
+    {% endblock content %}
 
     <footer class="site-footer">
         <div class="container">
