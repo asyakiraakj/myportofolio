@@ -44,6 +44,11 @@
                                     <p class="skill-desc">{{ skill.description }}</p>
                                     <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
                                     <p class="skill-cat">{{ skill.category }}</p>
+                                    <div class="skill-card-actions">
+                                        <div class="skill-actions">
+                                            {% include "components/skill_delete_modal.html" with skills=skills %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -60,6 +65,14 @@
                                 <div class="skill-card-details">
                                     <p class="skill-desc">{{ skill.description }}</p>
                                     <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
+                                    <div class="skill-card-actions">
+                                        <div class="skill-actions">
+                                            {% if skill.skill_url %}
+                                                <a href="{{ skill.skill_url }}" class="button">Lihat Skill</a>
+                                            {% endif %}
+                                            {% include "components/skill_delete_modal.html" with skill=skill %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
