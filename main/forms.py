@@ -56,7 +56,7 @@ class ExperienceForm(ModelForm):
         model = Experience
         fields = [
             "title",
-            "description"
+            "description",
             "category",
             "thumbnail",
         ]
