@@ -4,6 +4,7 @@ from django.shortcuts import render
 from main.models import Experience
 from main.models import Skills
 from main.forms import SkillsForm
+from main.forms import ExperienceForm
 
 from django.contrib import messages
 from django.core import serializers
@@ -24,9 +25,17 @@ def show_main(request):
 
 
 def show_experience(request):
+    json_response = get_experience_json(request)
+    experiences = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+
+    experiences = [experience.object for experience in experiences]
+    name_query = request.GET.get("name", "").strip()
     context = {
         "name": "Syakira",
-        "experience_list": Experience.objects.all(),
+        "experience_list": name_query,
     }
     return render(request, "experience.html", context)
 
@@ -85,3 +94,36 @@ def get_skills_json(request):
 
     skills_json = serializers.serialize("json", skills)
     return HttpResponse(skills_json, content_type="application/json")
+
+def get_experience_json(request):
+    name_query = request.GET.get("name", "").strip()
+    experiences = Experience.objects.all()
+
+    if name_query:
+        experiences = experiences.filter(name__iscontains=name_query)
+    experiences_json = serializers.serialize("json", experiences)
+    return HttpResponse(experiences_json, content_type="application/json")
+
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Experience baru berhasil ditambahkan!")
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Burhan",
+        "form": form,
+    }
+    return render(request, "experience_form.html", context)
+
+def delete_experience(request, experience_id):
+    experience = get_object_or_404(Skills, pk=experience_id)
+
+    if request.method == "POST":
+        experience.delete()
+        messages.success(request, "Experience berhasil dihapus!")
+        return redirect("main:show_experience")
+
+    return redirect("main:show_experience")
