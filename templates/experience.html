@@ -9,6 +9,7 @@
         <div class="container">
             <p class="section-kicker">Perjalanan saya sejauh ini</p>
             <h1>Experience</h1>
+            <a href="{% url 'main:create_experience' %}" class="button experience-add-button"><span aria-hidden="true">+</span>Tambah Experience</a>
 
             <div class="experience-grid">
                 {% for experience in experience_list %}
@@ -26,6 +27,12 @@
                         {% else %}
                             <p class="experience-status">Selesai</p>
                         {% endif %}
+                        <div class="experience-card-actions">
+                            {% include "components/experience_delete_modal.html" with skills=skills %}
+                            <div class="button update-experience">
+                                <a href="{% url 'main:update_experience' experience.id %}">Update Experience</a>
+                            </div>
+                        </div>
                     </article>
                 {% empty %}
                     <p class="empty-state">
