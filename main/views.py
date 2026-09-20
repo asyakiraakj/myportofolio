@@ -35,7 +35,8 @@ def show_experience(request):
     name_query = request.GET.get("name", "").strip()
     context = {
         "name": "Syakira",
-        "experience_list": name_query,
+        "experience_list": experiences,
+        "name_query": name_query,
     }
     return render(request, "experience.html", context)
 
@@ -100,7 +101,7 @@ def get_experience_json(request):
     experiences = Experience.objects.all()
 
     if name_query:
-        experiences = experiences.filter(name__iscontains=name_query)
+        experiences = experiences.filter(title__icontains=name_query)
     experiences_json = serializers.serialize("json", experiences)
     return HttpResponse(experiences_json, content_type="application/json")
 
@@ -116,10 +117,10 @@ def create_experience(request):
         "name": "Burhan",
         "form": form,
     }
-    return render(request, "experience_form.html", context)
+    return render(request, "experience_form_create.html", context)
 
 def delete_experience(request, experience_id):
-    experience = get_object_or_404(Skills, pk=experience_id)
+    experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
         experience.delete()
@@ -127,3 +128,19 @@ def delete_experience(request, experience_id):
         return redirect("main:show_experience")
 
     return redirect("main:show_experience")
+
+def update_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Experience berhasil diperbarui!")
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Syakira",
+        "form": form,
+        "experience": experience,
+    }
+    return render(request, "experience_form_update.html", context)
