@@ -33,10 +33,13 @@ def show_experience(request):
 
     experiences = [experience.object for experience in experiences]
     name_query = request.GET.get("name", "").strip()
+    category_query = request.GET.get("category", "").strip()
     context = {
         "name": "Syakira",
         "experience_list": experiences,
         "name_query": name_query,
+        "category_query": category_query,
+        "experience_categories": Experience.EXPERIENCE_CHOICES,
     }
     return render(request, "experience.html", context)
 
@@ -98,10 +101,13 @@ def get_skills_json(request):
 
 def get_experience_json(request):
     name_query = request.GET.get("name", "").strip()
+    category_query = request.GET.get("category", "").strip()
     experiences = Experience.objects.all()
 
     if name_query:
         experiences = experiences.filter(title__icontains=name_query)
+    if category_query:
+        experiences = experiences.filter(category=category_query)
     experiences_json = serializers.serialize("json", experiences)
     return HttpResponse(experiences_json, content_type="application/json")
 

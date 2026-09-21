@@ -15,6 +15,13 @@
                 <a href="{% url 'main:create_experience' %}" class="button experience-add-button"><span aria-hidden="true">+</span>Tambah Experience</a>
             </div>
 
+            <nav class="experience-category-filters" aria-label="Filter experience berdasarkan kategori">
+                <a href="{% url 'main:show_experience' %}" class="experience-filter-tag{% if not category_query %} is-active{% endif %}">Semua</a>
+                {% for value, label in experience_categories %}
+                    <a href="{% url 'main:show_experience' %}?category={{ value }}" class="experience-filter-tag{% if category_query == value %} is-active{% endif %}">{{ label }}</a>
+                {% endfor %}
+            </nav>
+
             <div class="experience-grid">
                 {% for experience in experience_list %}
                     <article class="experience-card">
@@ -43,7 +50,11 @@
                     </article>
                 {% empty %}
                     <p class="empty-state">
-                        Belum ada pengalaman yang ditambahkan.
+                        {% if category_query %}
+                            Belum ada pengalaman yang ditambahkan di kategori ini.
+                        {% else %}
+                            Belum ada pengalaman yang ditambahkan.
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
