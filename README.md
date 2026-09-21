@@ -30,3 +30,13 @@ Saya menggunakan bantuan generative AI yaitu Gemini dan Github untuk hal-hal seb
     - [menanyakan penyebab gap di bawah heading soft skills](https://drive.google.com/file/d/17sE_m8cvdkKkgIB8CxP9LkpxRj4rF2JQ/view?usp=sharing)
 - [bertanya bagaimana cara *update* object di django models.](https://share.gemini.google/FKoXm6pgSmWl)
 - [meminta membuatkan to-do list detail dengan estimasi waktu untuk tugas 2, meminta saran terkait pemisahan/kategorisasi skill, update/delete object di django models](https://share.gemini.google/lx4jBmD5XRsU)
+
+### Tugas 3
+1. `ModelForm` dipakai karena `ModelFrom` bisa otomatis membuat form berdasarkan model yang sudah ada, sehingga kita tidak perlu menulis tag input HTML manual dan data bisa langsung disimpan ke database lewat `form.save()`. Tag `{% csrf_token %}` wajib ada untuk mengamankan form dari request palsu (CSRF).
+2. Alasan JSON lebih disukai dalam pengembangan aplikasi web modern dibandingkan XML adalah karena penulisannya yang lebih ringkas dan mudah dibaca/dipahami. JSON menggunakan struktur key-value. JSON juga tidak membutuhkan tag pembuka dan penutup seperti XML.
+3. Alurnya dimulai saat ada request ke URL terkait, lalu fungsi *view* mengambil data dari database, mengubahnya ke format JSON dengan `serializers.serialize('json', data)`, dan mengirimkannya lewat `HttpResponse(...,content_type="application/json")`. Proses serialisasi ini penting dilakukan karena objek model bawaan Python tidak bisa langsung dikirim atau dibaca oleh browser/*frontend*, sehingga harus diubah dulu menjadi teks standar (JSON).
+#### AI Disclosure
+[Lampiran AI Chat Log (Github Copilot)](https://drive.google.com/drive/folders/1IFRRSKI-UDp6Rf7H0ZeQG8ITOfM7LIEG?usp=sharing)
+[Lampiran AI Chat Log (Gemini)](https://share.gemini.google/cCGaGx1z0Wcf)
+**Analisis Kekurangan AI**
+- Saat diminta untuk memperbaiki *button alignment* di experience card hasilnya masih kurang memuaskan. Jadi saya menganalisis kembali file `style.css` dan memperbaikinya sebisa saya.

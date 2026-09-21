@@ -501,7 +501,19 @@ a {
     gap: 1rem;
 }
 
+.experience-add-button {
+    transition: background-color 0.2s ease, color 0.2s ease;
+} 
+
+.experience-add-button:hover, 
+.experience-add-button:active {
+    background-color: var(--accent-dark) !important;
+}
+
 .experience-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 1.25rem;
     background-color: #fff;
     border: 1px solid var(--line);
@@ -526,9 +538,70 @@ a {
 }
 
 .experience-status {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     font-size: 0.85rem;
     font-weight: 600;
+}
+
+.experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: last baseline;
+}
+
+.experience-category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+}
+
+.experience-filter-tag {
+    padding: 0.25rem 0.75rem;
+    color: var(--accent-dark);
+    border: 1px solid var(--accent-dark);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, font-weight 0.2s ease;
+}
+
+.experience-filter-tag:hover,
+.experience-filter-tag.is-active {
+    color: var(--paper);
+    background-color: var(--accent-dark);
+    font-weight: 700;
+}
+
+.experience-card-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 1rem;
+}
+
+.experience-card-actions .experience-status {
+    margin-top: 0;
+}
+
+.experience-card-actions > .experience-status .button {
+    width: 100%;
+}
+
+.button.update-experience {
+    align-items: center;
+    background-color: transparent;
+    border: var(--accent) 1px solid;
+}
+
+.button.update-experience a{
+    display: block;
+    color: var(--accent);
+    font-size: 0.85rem;
+    text-decoration: none;
+    align-items: center;
 }
 
 .skills-form {
