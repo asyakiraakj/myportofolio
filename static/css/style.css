@@ -592,11 +592,13 @@ a {
 
 .button.update-experience {
     align-items: center;
+    background-color: transparent;
+    border: var(--accent) 1px solid;
 }
 
 .button.update-experience a{
     display: block;
-    color: var(--paper);
+    color: var(--accent);
     font-size: 0.85rem;
     text-decoration: none;
     align-items: center;
