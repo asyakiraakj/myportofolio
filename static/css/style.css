@@ -502,6 +502,9 @@ a {
 }
 
 .experience-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 1.25rem;
     background-color: #fff;
     border: 1px solid var(--line);
@@ -526,9 +529,43 @@ a {
 }
 
 .experience-status {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     font-size: 0.85rem;
     font-weight: 600;
+}
+
+.experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: last baseline;
+}
+
+.experience-card-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 1rem;
+}
+
+.experience-card-actions .experience-status {
+    margin-top: 0;
+}
+
+.experience-card-actions > .experience-status .button {
+    width: 100%;
+}
+
+.button.update-experience {
+    align-items: center;
+}
+
+.button.update-experience a{
+    display: block;
+    color: var(--paper);
+    font-size: 0.85rem;
+    text-decoration: none;
+    align-items: center;
 }
 
 .skills-form {
