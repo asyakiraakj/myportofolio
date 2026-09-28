@@ -33,7 +33,7 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     # Tambahkan path ini ke dalam urlpatterns
     path(
-        "projects/<uuid:project_id>/star/",
+        "skills/<uuid:skill_id>/star/",
         toggle_star,
         name="toggle_star",
     ),
