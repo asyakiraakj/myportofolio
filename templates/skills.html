@@ -14,7 +14,13 @@
             <p class="skills-kicker">My Skills</p>
             <div class="skills-header">
                 <h1>Skills</h1>
-                <a href="{% url 'main:create_skill' %}" class="button skill-add-button"><span aria-hidden="true">+</span>Tambah Skill</a>
+                {% if user.is_superuser %}  {# Tambahkan baris ini #}
+                    <a href="{% url 'main:create_project' %}"
+                    class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Proyek
+                    </a>
+                {% endif %}
             </div>
             <form action="{% url 'main:show_skills' %}" method="get" class="skills-search">
                 <input type="search" name="name" value="{{ name_query }}" placeholder="Cari berdasarkan nama skill" class="skills-search__input" aria-label="Cari berdasarkan nama skill">
@@ -34,7 +40,10 @@
                                     <p class="skill-cat">{{ skill.category }}</p>
                                     <div class="skill-card-actions">
                                         <div class="skill-actions">
-                                            {% include "components/skill_delete_modal.html" with skills=skills %}
+                                            {% if user.is_superuser %}
+                                                {% include "components/skill_star.html" with skill=skill %}
+                                                {% include "components/skill_delete_modal.html" with skill=skill %}
+                                            {% endif %} 
                                         </div>
                                     </div>
                                 </div>
