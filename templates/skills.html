@@ -40,10 +40,12 @@
                                     <p class="skill-cat">{{ skill.category }}</p>
                                     <div class="skill-card-actions">
                                         <div class="skill-actions">
-                                            {% if user.is_superuser %}
+                                            {% if user.is_authenticated %}
                                                 {% include "components/skill_star.html" with skill=skill %}
+                                            {% endif %}
+                                            {% if user.is_superuser %}
                                                 {% include "components/skill_delete_modal.html" with skill=skill %}
-                                            {% endif %} 
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

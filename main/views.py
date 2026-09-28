@@ -93,10 +93,34 @@ def create_skill(request):
     }
     return render(request, "skills_form.html", context)
 
+def update_skill(request, skill_id):
+    skill = get_object_or_404(Skills, pk=skill_id)
+    form = SkillsForm(request.POST or None, instance=skill)
+
+    is_editor = request.user.groups.filter(name='Editor').exists()
+
+    if not (request.user.is_superuser or is_editor):
+            raise PermissionDenied
+    
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Skill berhasil diperbarui!")
+        return redirect("main:show_skills")
+
+    context = {
+        "name": "Syakira",
+        "form": form,
+        "skill": skill,
+    }
+    return render(request, "experience_form_update.html", context)
+
 @login_required(login_url="/login/")
 def delete_skill(request, skill_id):
     skill = get_object_or_404(Skills, pk=skill_id)
 
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     if request.method == "POST":
         skill.delete()
         messages.success(request, "Skill berhasil dihapus!")
@@ -126,8 +150,12 @@ def get_experience_json(request):
     experiences_json = serializers.serialize("json", experiences)
     return HttpResponse(experiences_json, content_type="application/json")
 
+@login_required(login_url="/login/")
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
+
+    if not request.user.is_superuser:
+        raise PermissionDenied
 
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -140,8 +168,12 @@ def create_experience(request):
     }
     return render(request, "experience_form_create.html", context)
 
+@login_required(login_url="/login/")
 def delete_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
+
+    if not request.user.is_superuser:
+        raise PermissionDenied
 
     if request.method == "POST":
         experience.delete()
@@ -150,10 +182,16 @@ def delete_experience(request, experience_id):
 
     return redirect("main:show_experience")
 
+@login_required(login_url="/login/")
 def update_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceForm(request.POST or None, instance=experience)
 
+    is_editor = request.user.groups.filter(name='Editor').exists()
+
+    if not (request.user.is_superuser or is_editor):
+            raise PermissionDenied
+    
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Experience berhasil diperbarui!")
