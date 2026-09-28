@@ -3,6 +3,8 @@ import uuid
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from django.contrib.auth.models import User 
+
 class Experience(models.Model):
     EXPERIENCE_CHOICES = [
         ('internship', 'Internship'),
@@ -51,6 +53,9 @@ class Skills(models.Model):
             MinValueValidator(1),
             MaxValueValidator(10)
         ]
+    )
+    starred_by = models.ManyToManyField(
+        User, related_name="starred_projects", blank=True
     )
 
     def __str__(self):
