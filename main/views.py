@@ -148,7 +148,7 @@ def get_experience_json(request):
         experiences = experiences.filter(title__icontains=name_query)
     if category_query:
         experiences = experiences.filter(category=category_query)
-    experiences_json = serializers.serialize("json", experiences)
+    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
     return HttpResponse(experiences_json, content_type="application/json")
 
 @login_required(login_url="/login/")
