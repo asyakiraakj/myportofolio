@@ -699,9 +699,9 @@ a {
     border-color: var(--accent);
 }
 
-.skills-actions {
+.skill-actions {
     display: flex;
-    align-items: center;
+    align-items: first baseline;
     flex-wrap: wrap;
     gap: 20px;
     margin-top: 1rem;
@@ -712,9 +712,9 @@ a {
     font-weight: 600;
 }
 
-.skills-card-actions {
+.skill-card-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin-top: auto;
 }
 
