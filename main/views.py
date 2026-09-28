@@ -93,10 +93,35 @@ def create_skill(request):
     }
     return render(request, "skills_form.html", context)
 
+def update_skill(request, skill_id):
+    skill = get_object_or_404(Skills, pk=skill_id)
+    form = SkillsForm(request.POST or None, instance=skill)
+
+    is_editor = request.user.groups.filter(name='Editor').exists()
+
+    if not (request.user.is_superuser or is_editor):
+            raise PermissionDenied
+    
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Skill berhasil diperbarui!")
+        return redirect("main:show_skills")
+
+    context = {
+        "name": "Syakira",
+        "form": form,
+        "skill": skill,
+        "is_editor": is_editor
+    }
+    return render(request, "skill_form_update.html", context)
+
 @login_required(login_url="/login/")
 def delete_skill(request, skill_id):
     skill = get_object_or_404(Skills, pk=skill_id)
 
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     if request.method == "POST":
         skill.delete()
         messages.success(request, "Skill berhasil dihapus!")
@@ -123,11 +148,15 @@ def get_experience_json(request):
         experiences = experiences.filter(title__icontains=name_query)
     if category_query:
         experiences = experiences.filter(category=category_query)
-    experiences_json = serializers.serialize("json", experiences)
+    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
     return HttpResponse(experiences_json, content_type="application/json")
 
+@login_required(login_url="/login/")
 def create_experience(request):
     form = ExperienceForm(request.POST or None)
+
+    if not request.user.is_superuser:
+        raise PermissionDenied
 
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -140,8 +169,12 @@ def create_experience(request):
     }
     return render(request, "experience_form_create.html", context)
 
+@login_required(login_url="/login/")
 def delete_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
+
+    if not request.user.is_superuser:
+        raise PermissionDenied
 
     if request.method == "POST":
         experience.delete()
@@ -150,10 +183,16 @@ def delete_experience(request, experience_id):
 
     return redirect("main:show_experience")
 
+@login_required(login_url="/login/")
 def update_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceForm(request.POST or None, instance=experience)
 
+    is_editor = request.user.groups.filter(name='Editor').exists()
+
+    if not (request.user.is_superuser or is_editor):
+            raise PermissionDenied
+    
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Experience berhasil diperbarui!")
@@ -163,6 +202,7 @@ def update_experience(request, experience_id):
         "name": "Syakira",
         "form": form,
         "experience": experience,
+        "is_editor": is_editor
     }
     return render(request, "experience_form_update.html", context)
 
@@ -204,7 +244,7 @@ def logout_user(request):
 
 # Tanpa cek is_superuser: semua akun yang sudah login boleh memberi star
 @login_required(login_url="/login/")
-def toggle_star(request, skill_id):
+def toggle_star_skill(request, skill_id):
     skill = get_object_or_404(Skills, pk=skill_id)
 
     if request.method == "POST":
@@ -216,3 +256,17 @@ def toggle_star(request, skill_id):
             skill.starred_by.add(request.user)
 
     return redirect("main:show_skills")
+
+@login_required(login_url="/login/")
+def toggle_star_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+        else:
+            experience.starred_by.add(request.user)
+
+    return redirect("main:show_experiences")
