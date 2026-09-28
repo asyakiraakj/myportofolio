@@ -40,11 +40,15 @@
                                     <p class="skill-cat">{{ skill.category }}</p>
                                     <div class="skill-card-actions">
                                         <div class="skill-actions">
-                                            {% if user.is_authenticated %}
-                                                {% include "components/skill_star.html" with skill=skill %}
-                                            {% endif %}
+                                            <!-- star tetap visible untuk any user, untuk user yang belum log in akan diarahkan untuk login -->
+                                            {% include "components/skill_star.html" with skill=skill %}
                                             {% if user.is_superuser %}
                                                 {% include "components/skill_delete_modal.html" with skill=skill %}
+                                            {% endif %}
+                                            {% if user.is_superuser or is_editor %}
+                                                <div class="button update-skill">
+                                                    <a href="{% url 'main:update_skill' skill.id %}">Edit</a>
+                                                </div>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -69,7 +73,15 @@
                                             {% if skill.skill_url %}
                                                 <a href="{{ skill.skill_url }}" class="button">Lihat Skill</a>
                                             {% endif %}
-                                            {% include "components/skill_delete_modal.html" with skill=skill %}
+                                            {% include "components/skill_star.html" with skill=skill %}
+                                            {% if user.is_superuser %}
+                                                {% include "components/skill_delete_modal.html" with skill=skill %}
+                                            {% endif %}
+                                            {% if user.is_superuser or is_editor %}
+                                                <div class="button update-skill">
+                                                    <a href="{% url 'main:update_skill' skill.id %}">Edit</a>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

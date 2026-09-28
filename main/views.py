@@ -111,8 +111,9 @@ def update_skill(request, skill_id):
         "name": "Syakira",
         "form": form,
         "skill": skill,
+        "is_editor": is_editor
     }
-    return render(request, "experience_form_update.html", context)
+    return render(request, "skill_form_update.html", context)
 
 @login_required(login_url="/login/")
 def delete_skill(request, skill_id):
@@ -201,6 +202,7 @@ def update_experience(request, experience_id):
         "name": "Syakira",
         "form": form,
         "experience": experience,
+        "is_editor": is_editor
     }
     return render(request, "experience_form_update.html", context)
 
