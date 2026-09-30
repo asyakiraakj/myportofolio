@@ -61,6 +61,7 @@ def show_skills(request):
     context = {
         "name": "Syakira",
         "name_query": name_query,
+        "form": SkillsForm(),
     }
     return render(request, "skills.html", context)
 

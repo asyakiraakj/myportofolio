@@ -18,11 +18,12 @@
                 </button>
                 <h1>Skills</h1>
                 {% if user.is_superuser %}
-                    <a href="{% url 'main:create_skill' %}"
-                    class="button skill-add-button">
+                    <button type="button"
+                            class="button skill-add-button"
+                            popovertarget="add-skill-modal">
                         <span aria-hidden="true">+</span>
-                        Tambah Skill
-                    </a>
+                        Tambah Proyek
+                    </button>
                 {% endif %}
             </div>
             <form id="skill-search-form" class="skill-search">
@@ -125,6 +126,10 @@
     </section>
     </main>
 
+    {% if user.is_superuser %}
+        {% include "components/skill_form_modal.html" %}
+    {% endif %}
+
     <script>
     // Konfigurasi
     const BASE_SKILLS_ENDPOINT = "{% url 'main:get_skills_json' %}";
@@ -213,6 +218,10 @@
 
         articleElement.innerHTML = completeCardHtml;
         return articleElement;
+    }
+
+    function closeSkillModal() {
+        document.getElementById("add-skill-modal").hidePopover();
     }
 
     // Fetch data skill
