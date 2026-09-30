@@ -139,6 +139,9 @@
     const searchForm = document.getElementById('skill-search-form');
     const searchInput = document.getElementById('search-input');
 
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let searchDebounceTimer;
+
     // Menyembunyikan/Menampilkan section halaman
     function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
         loadingState.classList.toggle('hide', !showLoading);
@@ -248,9 +251,22 @@
     }
 
     // Event Handlers untuk Form Search
-    searchForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Mencegah reload halaman
-        fetchSkills(searchInput.value.trim()); // Jalankan pencarian via AJAX
+    function searchSkills() {
+        fetchSkills(searchInput.value.trim());
+    }
+
+    searchInput.addEventListener("input", function() {
+        clearTimeout(searchDebounceTimer);
+
+        searchDebounceTimer = setTimeout(function() {
+            searchSkills();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        searchSkills();
     });
 
     // Start application
