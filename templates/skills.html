@@ -13,8 +13,11 @@
         <div class="container">
             <p class="skills-kicker">My Skills</p>
             <div class="skills-header">
+                <button class="button button-secondary" onclick="showToast('Notifikasi Sistem', 'Project berhasil dimuat dengan baik!', 'success')">
+                    Test Toast Notifikasi
+                </button>
                 <h1>Skills</h1>
-                {% if user.is_superuser %}  {# Tambahkan baris ini #}
+                {% if user.is_superuser %}
                     <a href="{% url 'main:create_skill' %}"
                     class="button skill-add-button">
                         <span aria-hidden="true">+</span>
