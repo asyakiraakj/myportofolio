@@ -16,6 +16,7 @@ from main.views import (
     logout_user,
     toggle_star_experience,
     toggle_star_skill,
+    create_skill_ajax
 )
 
 app_name = "main"
@@ -34,7 +35,6 @@ urlpatterns = [
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
-    # Tambahkan path ini ke dalam urlpatterns
     path(
         "skills/<uuid:skill_id>/star/",
         toggle_star_skill,
@@ -45,5 +45,6 @@ urlpatterns = [
         toggle_star_experience,
         name="toggle_star_experience",
     ),
+    path("skills/add-ajax/", create_skill_ajax, name="create_skill_ajax"),
 
 ]
