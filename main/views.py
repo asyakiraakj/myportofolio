@@ -16,7 +16,9 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from django.contrib.auth.decorators import login_required 
-from django.core.exceptions import PermissionDenied       
+from django.core.exceptions import PermissionDenied
+
+from django.http import JsonResponse
 
 
 def show_main(request):
@@ -54,24 +56,12 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 def show_skills(request):
-    json_response = get_skills_json(request)
-
-    skills = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    skills = [skill.object for skill in skills]
     name_query = request.GET.get("name", "").strip()
-
-    hard_skills = [skill for skill in skills if skill.type == 'hard']
-    soft_skills = [skill for skill in skills if skill.type == 'soft']
 
     context = {
         "name": "Syakira",
-        "skills_list": skills,
-        "hard_skills": hard_skills,
-        "soft_skills": soft_skills,
         "name_query": name_query,
+        "form": SkillsForm(),
     }
     return render(request, "skills.html", context)
 
@@ -131,13 +121,33 @@ def delete_skill(request, skill_id):
 
 def get_skills_json(request):
     name_query = request.GET.get("name", "").strip()
-    skills = Skills.objects.all()
+    skills = Skills.objects.prefetch_related('starred_by').all()
 
     if name_query:
         skills = skills.filter(name__icontains=name_query)
 
-    skills_json = serializers.serialize("json", skills, use_natural_foreign_keys=True)
-    return HttpResponse(skills_json, content_type="application/json")
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logika Star
+    data = []
+    for skill in skills:
+        starred_users = skill.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(skill.id),
+            "fields": {
+                "name": skill.name,
+                "description": skill.description,
+                "category": skill.category,
+                "proficiency": skill.proficiency,
+                "type": skill.type,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 def get_experience_json(request):
     name_query = request.GET.get("name", "").strip()
@@ -270,3 +280,24 @@ def toggle_star_experience(request, experience_id):
             experience.starred_by.add(request.user)
 
     return redirect("main:show_experiences")
+
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def create_skill_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan skill."},
+            status=403,
+        )
+
+    form = SkillsForm(request.POST)
+    if form.is_valid():
+        skill = form.save()
+        return JsonResponse(
+            {"message": "Skill berhasil ditambahkan.", "pk": str(skill.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
