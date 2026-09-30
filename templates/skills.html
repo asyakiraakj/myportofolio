@@ -155,6 +155,16 @@
         gridContainer.classList.toggle('hide', !showGrid);
     }
 
+    // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
     // Membuat elemen card skill
     function buildSkillCardElement(item) {
         const skill = item.fields;
@@ -163,12 +173,12 @@
         const articleElement = document.createElement('article');
         articleElement.className = 'experience-card';
 
-        const imageHtml = skill.skill_image_url 
-            ? `<img src="${skill.skill_image_url}" alt="Gambar ${skill.name}" class="skill-image">`
+        const imageHtml = skill.skill_image_url
+            ? `<img src="${escapeHtml(skill.skill_image_url)}" alt="Gambar ${escapeHtml(skill.name)}" class="skill-image">`
             : '';
 
-        const urlHtml = skill.skill_url 
-            ? `<a href="${skill.skill_url}" class="button">Lihat Skill</a>`
+        const urlHtml = skill.skill_url
+            ? `<a href="${escapeHtml(skill.skill_url)}" class="button">Lihat Skill</a>`
             : '';
 
         // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
@@ -186,16 +196,16 @@
 
         const isStarredClass = skill.is_starred ? " is-starred" : "";
         const starText = skill.is_starred ? "Unstar" : "Star";
-        const starTitle = skill.star_count > 0 
-            ? `Dibintangi oleh ${skill.starred_by_names}` 
+        const starTitle = skill.star_count > 0
+            ? `Dibintangi oleh ${escapeHtml(skill.starred_by_names)}`
             : "Jadilah yang pertama memberi star";
 
         // Komponen card
         const completeCardHtml = `
             ${imageHtml}
-            <h2>${skill.name}</h2>
-            <span class="experience-category">${skill.category}</span>
-            <p class="experience-description">${skill.description}</p>
+            <h2>${escapeHtml(skill.name)}</h2>
+            <span class="experience-category">${escapeHtml(skill.category)}</span>
+            <p class="experience-description">${escapeHtml(skill.description)}</p>
             <div class="skill-card-actions">
                 <div class="skill-actions">
                     ${urlHtml}
