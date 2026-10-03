@@ -55,73 +55,22 @@
                 <!-- Skill Grid -->
                 <div id="grid" class="experience-grid skill-grid hide"></div>
             <hr>
-            <div class="skills-container-grid">
+            <!-- Main Skills Container -->
+            <div id="skills-wrapper" class="skills-container-grid">
+                
+                <!-- Hard Skills -->
                 <div class="skills-group hard-skills">
                     <h2>Hard Skills</h2>
-                    <!-- <div class="skill-cards-grid"> -->
-                        <div id="hard-skills-grid" class="skill-cards-grid"></div>
-                        <!-- {% for skill in skills %}
-                            <div class="skill-card">
-                                <h3>{{ skill.name }}</h3>
-                                <div class="skill-card-details">
-                                    <p class="skill-desc">{{ skill.description }}</p>
-                                    <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
-                                    <p class="skill-cat">{{ skill.category }}</p>
-                                    <div class="skill-card-actions">
-                                        <div class="skill-actions"> -->
-                                            <!-- star tetap visible untuk any user, untuk user yang belum log in akan diarahkan untuk login -->
-                                            <!-- {% include "components/skill_star.html" with skill=skill %}
-                                            {% if user.is_superuser %}
-                                                {% include "components/skill_delete_modal.html" with skill=skill %}
-                                            {% endif %}
-                                            {% if user.is_superuser or is_editor %}
-                                                <div class="button update-skill">
-                                                    <a href="{% url 'main:update_skill' skill.id %}">Edit</a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p class="empty-state">Belum ada skill yang ditambahkan</p>
-                        {% endfor %} -->
-                    <!-- </div> -->
+                    <div id="hard-skills-grid" class="skill-cards-grid"></div>
                 </div>
-                <!-- <div class="skills-group soft-skills">
-                    <h2>Soft Skills</h2>
-                    <div class="skill-cards-grid">
-                        {% for skill in soft_skills %}
-                            <div class="skill-card">
-                                <h3>{{ skill.name }}</h3>
-                                <div class="skill-card-details">
-                                    <p class="skill-desc">{{ skill.description }}</p>
-                                    <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
-                                    <div class="skill-card-actions">
-                                        <div class="skill-actions">
-                                            {% if skill.skill_url %}
-                                                <a href="{{ skill.skill_url }}" class="button">Lihat Skill</a>
-                                            {% endif %}
-                                            {% include "components/skill_star.html" with skill=skill %}
-                                            {% if user.is_superuser %}
-                                                {% include "components/skill_delete_modal.html" with skill=skill %}
-                                            {% endif %}
-                                            {% if user.is_superuser or is_editor %}
-                                                <div class="button update-skill">
-                                                    <a href="{% url 'main:update_skill' skill.id %}">Edit</a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p class="empty-state">Belum ada skill yang ditambahkan</p>
-                        {% endfor %}
-                    </div>
-                </div> -->
-            </div>
 
+                <!-- Soft Skills -->
+                <div class="skills-group soft-skills">
+                    <h2>Soft Skills</h2>
+                    <div id="soft-skills-grid" class="skill-cards-grid"></div>
+                </div>
+
+            </div>
         </div>
     </section>
     </main>
@@ -140,7 +89,9 @@
     const loadingState = document.getElementById('loading');
     const errorState = document.getElementById('error');
     const emptyState = document.getElementById('empty');
-    const gridContainer = document.getElementById('hard-skills-grid');
+    const skillsWrapper = document.getElementById('skills-wrapper');
+    const hardSkillsGrid = document.getElementById('hard-skills-grid');
+    const softSkillsGrid = document.getElementById('soft-skills-grid');
     const searchForm = document.getElementById('skill-search-form');
     const searchInput = document.getElementById('search-input');
 
@@ -152,7 +103,7 @@
         loadingState.classList.toggle('hide', !showLoading);
         errorState.classList.toggle('hide', !showError);
         emptyState.classList.toggle('hide', !showEmpty);
-        gridContainer.classList.toggle('hide', !showGrid);
+        skillsWrapper.classList.toggle('hide', !showGrid);
     }
 
     // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
@@ -242,7 +193,7 @@
         try {
             displayPageSection({ showLoading: true });
             
-            const url = searchQuery ? `${BASE_SKILLS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_SKILLS_ENDPOINT;
+            const url = searchQuery ? `${BASE_SKILLS_ENDPOINT}?name=${encodeURIComponent(searchQuery)}` : BASE_SKILLS_ENDPOINT;
             
             const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' },
@@ -256,10 +207,32 @@
             if (skillData.length === 0) {
                 displayPageSection({ showEmpty: true });
             } else {
-                gridContainer.innerHTML = '';
-                skillData.forEach(item => {
-                    gridContainer.appendChild(buildSkillCardElement(item));
-                });
+                // Bersihkan kedua container sebelum mengisi data baru
+                hardSkillsGrid.innerHTML = '';
+                softSkillsGrid.innerHTML = '';
+
+                // Pisahkan data berdasarkan tipe
+                const hardSkills = skillData.filter(item => item.fields.type === 'hard');
+                const softSkills = skillData.filter(item => item.fields.type === 'soft');
+
+                // Render Hard Skills
+                if (hardSkills.length > 0) {
+                    hardSkills.forEach(item => {
+                        hardSkillsGrid.appendChild(buildSkillCardElement(item));
+                    });
+                } else {
+                    hardSkillsGrid.innerHTML = '<p class="empty-state">Belum ada hard skill yang ditemukan.</p>';
+                }
+
+                // Render Soft Skills
+                if (softSkills.length > 0) {
+                    softSkills.forEach(item => {
+                        softSkillsGrid.appendChild(buildSkillCardElement(item));
+                    });
+                } else {
+                    softSkillsGrid.innerHTML = '<p class="empty-state">Belum ada soft skill yang ditemukan.</p>';
+                }
+
                 displayPageSection({ showGrid: true });
             }
         } catch (error) {
