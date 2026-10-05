@@ -166,6 +166,10 @@
         return articleElement;
     }
 
+    function closeExperienceModal() {
+        document.getElementById("add-experience-modal").hidePopover();
+    }
+
     // Fetch data experience
     async function fetchExperiences(searchQuery = "") {
         if (experiencesAbortController) experiencesAbortController.abort();
@@ -198,10 +202,6 @@
             if (error.name === 'AbortError') return;
             console.error('Error loading experiences:', error);
             displayPageSection({ showError: true });
-        }
-
-        function closeExperienceModal() {
-            document.getElementById("add-experience-modal").hidePopover();
         }
     }
 
