@@ -28,6 +28,8 @@ urlpatterns = [
     ),
     path('skills/json/', get_skills_json, name='get_skills_json'),
     path('experience/json/', get_experiences_json, name='get_experiences_json'),
+    path("skills/add-ajax/", create_skill_ajax, name="create_skill_ajax"),
+    path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
 
 
 ]
