@@ -37,19 +37,11 @@ def show_main(request):
 
 
 def show_experience(request):
-    json_response = get_experience_json(request)
-    experiences = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-
-    experiences = [experience.object for experience in experiences]
-    name_query = request.GET.get("name", "").strip()
+    title_query = request.GET.get("title", "").strip()
     category_query = request.GET.get("category", "").strip()
     context = {
         "name": "Syakira",
-        "experience_list": experiences,
-        "name_query": name_query,
+        "title_query": title_query,
         "category_query": category_query,
         "experience_categories": Experience.EXPERIENCE_CHOICES,
     }
@@ -149,17 +141,39 @@ def get_skills_json(request):
 
     return JsonResponse(data, safe=False)
 
-def get_experience_json(request):
-    name_query = request.GET.get("name", "").strip()
+def get_experiences_json(request):
+    title_query = request.GET.get("title", "").strip()
     category_query = request.GET.get("category", "").strip()
-    experiences = Experience.objects.all()
+    experiences = Experience.objects.prefetch_related('starred_by').all()
 
-    if name_query:
-        experiences = experiences.filter(title__icontains=name_query)
+    if title_query:
+        experiences = experiences.filter(title__icontains=title_query)
     if category_query:
         experiences = experiences.filter(category=category_query)
-    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
-    return HttpResponse(experiences_json, content_type="application/json")
+
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logika Star
+    data = []
+    for experience in experiences:
+        starred_users = experience.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(experience.id),
+            "fields": {
+                "title": experience.title,
+                "description": experience.description,
+                "category": experience.category,
+                "thumbnail": experience.thumbnail,
+                "started_at": experience.started_at,
+                "ended_at": experience.ended_at,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
 def create_experience(request):
