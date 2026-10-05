@@ -72,6 +72,8 @@
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     let experiencesAbortController;
 
+    let currentCategory = "{{ category_query|escapejs }}";
+
     // Elemen DOM
     const loadingState = document.getElementById('loading');
     const errorState = document.getElementById('error');
@@ -89,16 +91,6 @@
         errorState.classList.toggle('hide', !showError);
         emptyState.classList.toggle('hide', !showEmpty);
         gridContainer.classList.toggle('hide', !showGrid);
-    }
-
-    // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
-    function escapeHtml(value) {
-        return String(value ?? '')
-            .replaceAll('&', '&amp;')
-            .replaceAll('<', '&lt;')
-            .replaceAll('>', '&gt;')
-            .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#39;');
     }
 
     // Membuat elemen card experience
@@ -166,15 +158,24 @@
         return articleElement;
     }
 
+    function closeExperienceModal() {
+        document.getElementById("add-experience-modal").hidePopover();
+    }
+
     // Fetch data experience
-    async function fetchExperiences(searchQuery = "") {
+    async function fetchExperiences(searchQuery = "", categoryQuery = "") {
         if (experiencesAbortController) experiencesAbortController.abort();
         experiencesAbortController = new AbortController();
 
         try {
             displayPageSection({ showLoading: true });
+
+            const params = new URLSearchParams();
+            if (searchQuery) params.append('title', searchQuery);
+            if (categoryQuery) params.append('category', categoryQuery);
             
-            const url = searchQuery ? `${BASE_EXPERIENCES_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_EXPERIENCES_ENDPOINT;
+            const queryString = params.toString();
+            const url = queryString ? `${BASE_EXPERIENCES_ENDPOINT}?${queryString}` : BASE_EXPERIENCES_ENDPOINT;
             
             const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' },
@@ -199,11 +200,22 @@
             console.error('Error loading experiences:', error);
             displayPageSection({ showError: true });
         }
-
-        function closeExperienceModal() {
-            document.getElementById("add-experience-modal").hidePopover();
-        }
     }
+
+    // Filter Category
+    const categoryButtons = document.querySelectorAll('.experience-filter-tag');
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            categoryButtons.forEach(btn => btn.classList.remove('is-active'));
+            this.classList.add('is-active');
+
+            const urlParams = new URL(this.href).searchParams;
+            currentCategory = urlParams.get('category') || "";
+
+            fetchExperiences(searchInput.value.trim(), currentCategory);
+        });
+    });
 
     // Event Handlers untuk Form Search
     function searchExperience() {
@@ -225,25 +237,9 @@
     });
 
     // Start application
-    fetchExperiences(searchInput.value.trim());
+    fetchExperiences(searchInput.value.trim(), currentCategory);
     const CREATE_EXPERIENCE_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
     const experienceForm = document.getElementById('experience-form');
-
-    // Membaca nilai cookie, digunakan untuk mengambil token CSRF
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     // Mengirim data form ke server
     async function addExperience(event) {

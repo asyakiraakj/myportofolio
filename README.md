@@ -48,3 +48,16 @@ Saya menggunakan bantuan generative AI yaitu Gemini untuk hal-hal berikut:
 - [fix css not updated](https://share.gemini.google/iFMlAfztH5HN)
 <br>**Analisis Kekurangan AI**
 Ketika saya meminta bantuan AI untuk memperbaiki CSS yang tidak ter-*update* di skills card, AI tidak meng*suggest* solusi untuk mengecek penulisan nama class di `style.css`, padahal setelah saya coba-coba dan cek kembali, ternyata di situlah letak kesalahan yang membuat CSS saya tidak ter-*update*.
+
+### Tugas 5
+1. Jelaskan apa itu debouncing dan mengapa teknik ini penting diterapkan pada fitur pencarian yang menggunakan AJAX!<br>
+Debouncing adalah teknik untuk menunda eksekusi sebuah fungsi sampai user berhenti melakukan sesuatu (misalnya mengetik) setelah jeda waktu tertentu. Debouncing penting diterapkan di fitur pencarian karena jika tidak diterapkan, AJAX akan mengirimkan request ke server setiap user mengetikkan satu hurug di fitur pencarian.
+2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?<br>
+`await` berguna untuk menyuruh JavaScript agar menunggu sampai proses pengambilan data (*fetch*) selesai dari server, baru lanjut eksekusi baris kode di bawahnya. Jika tidak menggunakan `await`, JavaScript akan langsung lanjut mengeksekusi baris-baris kode selanjutnya padahal datanya belum sampai. Akibatnya, variabel (yang dibuat untuk menampung hasil `fetch()`) hanya akan berisi `Promise` yang statusnya *pending*.
+3. Jelaskan apa itu serangan XSS (Cross-Site Scripting) dan mengapa data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini daripada data yang ditampilkan langsung melalui template Django!<br>
+*XSS (Cross-Site Scripting)* adalah serangan dimana ketika seseorang menyelipkan script ke dalam input web kita yang mana script tersebut ikut tereksekusi di browser. AJAX/JavaScript lebih rentan terhadap serangan ini karena jika kita mengambil dan menampilkan data menggunakan AJAX/JavaScript, data tersebut langsung dimasukkan mentah-mentah. Berbeda jika menggunakan Django, Django akan otomatis melakukan *auto-escaping*.
+#### AI Disclosure
+Saya menggunakan bantuan generative AI yaitu Gemini.<br>
+[Lampiran AI chat log Tugas 5](https://share.gemini.google/PxOBsvTnaVs8)
+<br>**Analisis Kekurangan AI**<br>
+Pada awalnya experience cards saya tidak ter render sama sekali. Ketika saya mencoba menanyakan kepada AI penyebabnya apa, dia tidak menemukan kesalahannya dimana atau perbaikan yang dia sebutkan belum sepenuhnya menyelesaikan masalah tersebut. Setelah itu saya coba perhatikan kembali dan saya curiga masalahnya terdapat di *url path*, lalu saya *suggest* apakah mungkin masalahnya berada di *url path* dan ternyata benar.
