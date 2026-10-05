@@ -37,11 +37,11 @@ def show_main(request):
 
 
 def show_experience(request):
-    name_query = request.GET.get("name", "").strip()
+    title_query = request.GET.get("title", "").strip()
     category_query = request.GET.get("category", "").strip()
     context = {
         "name": "Syakira",
-        "name_query": name_query,
+        "title_query": title_query,
         "category_query": category_query,
         "experience_categories": Experience.EXPERIENCE_CHOICES,
     }
