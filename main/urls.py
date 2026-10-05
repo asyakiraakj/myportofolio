@@ -1,20 +1,6 @@
 from django.urls import path
 
-from main.views import (
-    show_main, 
-    show_experience, 
-    show_skills, 
-    create_skill, 
-    get_skills_json,
-    delete_skill,
-    create_experience,
-    update_experience,
-    delete_experience,
-    register,
-    login_user,
-    logout_user,
-    toggle_star
-)
+from main.views import *
 
 app_name = "main"
 
@@ -33,9 +19,17 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
     # Tambahkan path ini ke dalam urlpatterns
     path(
-        "projects/<uuid:project_id>/star/",
-        toggle_star,
-        name="toggle_star",
+        "skills/<uuid:skill_id>/star/",
+        toggle_star_skill,
+        name="toggle_star_skill",
     ),
+    path(
+        "experiences/<uuid:experience_id>/star/",
+        toggle_star_experience,
+        name="toggle_star_experience",
+    ),
+    path('json/', get_skills_json, name='get_skills_json'),
+    path('json/', get_experiences_json, name='get_experiences_json'),
+
 
 ]
