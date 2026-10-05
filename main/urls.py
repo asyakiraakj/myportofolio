@@ -10,6 +10,7 @@ urlpatterns = [
     path("skills/", show_skills, name="show_skills"),
     path("skills/add/", create_skill, name="create_skill"),
     path("skills/<uuid:skill_id>/delete/",delete_skill,name="delete_skill"),
+    path("skill/<uuid:skill_id>/update/", update_skill, name="update_skill"),
     path("experience/add/", create_experience, name="create_experience"),
     path("experience/<uuid:experience_id>/delete/",delete_experience,name="delete_experience"),
     path("experience/<uuid:experience_id>/update/", update_experience, name="update_experience"),
@@ -30,6 +31,4 @@ urlpatterns = [
     path('experience/json/', get_experiences_json, name='get_experiences_json'),
     path("skills/add-ajax/", create_skill_ajax, name="create_skill_ajax"),
     path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
-
-
 ]

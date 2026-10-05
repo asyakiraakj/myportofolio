@@ -38,5 +38,13 @@ Saya menggunakan bantuan generative AI yaitu Gemini dan Github untuk hal-hal seb
 #### AI Disclosure
 [Lampiran AI Chat Log (Github Copilot)](https://drive.google.com/drive/folders/1IFRRSKI-UDp6Rf7H0ZeQG8ITOfM7LIEG?usp=sharing)
 [Lampiran AI Chat Log (Gemini)](https://share.gemini.google/cCGaGx1z0Wcf)
-**Analisis Kekurangan AI**
+<br>**Analisis Kekurangan AI**
 - Saat diminta untuk memperbaiki *button alignment* di experience card hasilnya masih kurang memuaskan. Jadi saya menganalisis kembali file `style.css` dan memperbaikinya sebisa saya.
+
+### Tugas 4
+#### AI Disclosure
+Saya menggunakan bantuan generative AI yaitu Gemini untuk hal-hal berikut:
+- [authorization, fitur star, keamanan data](https://share.gemini.google/Eh6St2vIRKW6)
+- [fix css not updated](https://share.gemini.google/iFMlAfztH5HN)
+<br>**Analisis Kekurangan AI**
+Ketika saya meminta bantuan AI untuk memperbaiki CSS yang tidak ter-*update* di skills card, AI tidak meng*suggest* solusi untuk mengecek penulisan nama class di `style.css`, padahal setelah saya coba-coba dan cek kembali, ternyata di situlah letak kesalahan yang membuat CSS saya tidak ter-*update*.
