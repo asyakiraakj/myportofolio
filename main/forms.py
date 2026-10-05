@@ -2,6 +2,9 @@ from django.forms import ModelForm, TextInput, Textarea, URLInput, ModelChoiceFi
 
 from main.models import Skills, Experience
 
+from django.core.exceptions import ValidationError
+from django.utils.html import strip_tags
+
 class SkillsForm(ModelForm):
     class Meta:
         model = Skills
@@ -50,6 +53,20 @@ class SkillsForm(ModelForm):
                 }
             ),
         }
+
+    def clean_name(self):
+        name = strip_tags(self.cleaned_data["name"]).strip()
+        if not name:
+            raise ValidationError("Nama skill tidak boleh hanya berisi tag HTML.")
+        return name
+
+    def clean_category(self):
+        return strip_tags(self.cleaned_data["category"]).strip()
+
+    def clean_description(self):
+        return strip_tags(self.cleaned_data["description"]).strip()
+
+    
 
 class ExperienceForm(ModelForm):
     class Meta:
