@@ -44,6 +44,7 @@ def show_experience(request):
         "title_query": title_query,
         "category_query": category_query,
         "experience_categories": Experience.EXPERIENCE_CHOICES,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
