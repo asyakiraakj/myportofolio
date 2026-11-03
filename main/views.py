@@ -39,12 +39,14 @@ def show_main(request):
 def show_experience(request):
     title_query = request.GET.get("title", "").strip()
     category_query = request.GET.get("category", "").strip()
+    is_editor = request.user.groups.filter(name='Editor').exists()
     context = {
         "name": "Syakira",
         "title_query": title_query,
         "category_query": category_query,
         "experience_categories": Experience.EXPERIENCE_CHOICES,
         "form": ExperienceForm(),
+        "is_editor": is_editor,
     }
     return render(request, "experience.html", context)
 
@@ -297,7 +299,6 @@ def toggle_star_experience(request, experience_id):
     return redirect("main:show_experiences")
 
 from django.views.decorators.http import require_POST
-
 
 @require_POST
 def create_skill_ajax(request):

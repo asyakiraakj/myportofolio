@@ -65,6 +65,9 @@
     {% if user.is_superuser %}
         {% include "components/experience_form_modal.html" %}
     {% endif %}
+    {% if user.is_superuser or is_editor %}
+        {% include "components/experience_form_update_modal.html" %}
+    {% endif %}
 
     <script>
     // Konfigurasi
@@ -101,8 +104,8 @@
         const articleElement = document.createElement('article');
         articleElement.className = 'experience-card';
 
-        const imageHtml = experience.experience_image_url
-            ? `<img src="${escapeHtml(experience.experience_image_url)}" alt="Gambar ${escapeHtml(experience.title)}" class="experience-image">`
+        const imageHtml = experience.thumbnail
+            ? `<img src="${escapeHtml(experience.thumbnail)}" alt="Gambar ${escapeHtml(experience.title)}" class="experience-image">`
             : '';
 
         const urlHtml = experience.experience_url
@@ -114,12 +117,19 @@
             .replace('00000000-0000-0000-0000-000000000000', experienceId);
         const starUrl = "{% url 'main:toggle_star_experience' '00000000-0000-0000-0000-000000000000' %}"
             .replace('00000000-0000-0000-0000-000000000000', experienceId);
+        const updateUrl = "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
+            .replace('00000000-0000-0000-0000-000000000000', experienceId);
 
         const deleteHtml = IS_SUPERUSER 
             ? `<form method="post" action="${deleteUrl}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus experience ini?');">Hapus</button>
             </form>`
+            : '';
+
+        const updateHtml = IS_SUPERUSER || IS_EDITOR
+            ? `<button type="button" class="button" data-experience-id="${escapeHtml(experienceId)}"
+                data-update-url="${escapeHtml(updateUrl)}" onclick="openUpdateExperienceModal(this)">Edit</button>`
             : '';
 
         const isStarredClass = experience.is_starred ? " is-starred" : "";
@@ -150,6 +160,7 @@
                     </form>
 
                     ${deleteHtml}
+                    ${updateHtml}
                 </div>
             </div>
         `;
@@ -240,6 +251,27 @@
     fetchExperiences(searchInput.value.trim(), currentCategory);
     const CREATE_EXPERIENCE_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
     const experienceForm = document.getElementById('experience-form');
+    const IS_EDITOR = "{{ is_editor|yesno:'true,false' }}" === "true";
+    const updateExperienceForm = document.getElementById('update-experience-form');
+    const updateExperienceModal = document.getElementById('update-experience-modal');
+
+    function openUpdateExperienceModal(button) {
+        const card = button.closest('.experience-card');
+        const fields = updateExperienceForm.elements;
+        const values = {
+            title: card.querySelector('h2').textContent,
+            description: card.querySelector('.experience-description').textContent,
+            category: card.querySelector('.experience-category').textContent.toLowerCase(),
+            thumbnail: card.querySelector('.experience-image')?.src || '',
+        };
+
+        fields.title.value = values.title;
+        fields.description.value = values.description;
+        fields.category.value = values.category;
+        fields.thumbnail.value = values.thumbnail;
+        updateExperienceForm.action = button.dataset.updateUrl;
+        updateExperienceModal.showPopover();
+    }
 
     // Mengirim data form ke server
     async function addExperience(event) {
