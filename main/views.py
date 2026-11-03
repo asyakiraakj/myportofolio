@@ -300,7 +300,6 @@ def toggle_star_experience(request, experience_id):
 
 from django.views.decorators.http import require_POST
 
-
 @require_POST
 def create_skill_ajax(request):
     if not request.user.is_superuser:
