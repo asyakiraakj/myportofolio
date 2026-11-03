@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from main.views import (
     show_main, 
@@ -47,4 +47,10 @@ urlpatterns = [
     ),
     path("skills/add-ajax/", create_skill_ajax, name="create_skill_ajax"),
 
+]
+
+# Append after your existing urlpatterns definition.
+urlpatterns += [
+    path("api/v1/", include("main.api_urls")),
+    path("api-auth/", include("rest_framework.urls")),
 ]
