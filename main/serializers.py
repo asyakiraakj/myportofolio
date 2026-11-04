@@ -16,7 +16,9 @@ class ExperienceSerializer(serializers.ModelSerializer):
             "thumbnail", "started_at", "ended_at",
             "starred_by", "star_count", "is_starred", "starred_by_names"
         ]
-        read_only_fields = ["id"]
+        read_only_fields = [
+            "id", "starred_by", "star_count", "is_starred", "starred_by_names",
+        ]
 
     def validate_title(self, value):
         value = strip_tags(value).strip()
