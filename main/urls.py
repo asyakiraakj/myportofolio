@@ -32,11 +32,4 @@ urlpatterns = [
     path("skills/add-ajax/", create_skill_ajax, name="create_skill_ajax"),
     path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
 
-
-]
-
-# Append after your existing urlpatterns definition.
-urlpatterns += [
-    path("api/v1/", include("main.api_urls")),
-    path("api-auth/", include("rest_framework.urls")),
 ]
