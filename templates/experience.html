@@ -12,7 +12,14 @@
                     <p class="section-kicker">Perjalanan saya sejauh ini</p>
                     <h1>Experience</h1>
                 </div>
-                <a href="{% url 'main:create_experience' %}" class="button experience-add-button"><span aria-hidden="true">+</span>Tambah Experience</a>
+                {% if user.is_superuser %}
+                    <button type="button"
+                            class="button experience-add-button"
+                            popovertarget="add-experience-modal">
+                        <span aria-hidden="true">+</span>
+                        Tambah Experience
+                    </button>
+                {% endif %}
             </div>
 
             <nav class="experience-category-filters" aria-label="Filter experience berdasarkan kategori">
