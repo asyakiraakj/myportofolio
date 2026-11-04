@@ -18,8 +18,12 @@ jobs:
 
       - name: Push to PWS master
         env:
-          PWS_URL: ${{ secrets.PWS_URL }}
+          PWS_URL: ${{ secrets.PWS_URL || vars.PWS_URL }}
         run: |
+          if [ -z "$PWS_URL" ]; then
+            echo "PWS_URL is not set. Define secrets.PWS_URL or vars.PWS_URL."
+            exit 1
+          fi
           if ! output=$(git push "$PWS_URL" HEAD:master 2>&1); then
             echo "Push failed:"
             echo "$output"
