@@ -118,5 +118,5 @@ sftp-config.json
 # macOS
 .DS_Store
 
-# archive
+# archive files
 archive/

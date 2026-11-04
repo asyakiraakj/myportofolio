@@ -1,0 +1,29 @@
+name: Push to PWS
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  push-to-pws:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # full history, needed to push without shallow-clone errors
+
+      - name: Push to PWS master
+        env:
+          PWS_URL: ${{ secrets.PWS_URL }}
+        run: |
+          if ! output=$(git push "$PWS_URL" HEAD:master 2>&1); then
+            echo "Push failed:"
+            echo "$output"
+            exit 1
+          fi
+          echo "Push successful:"
+          echo "$output"
