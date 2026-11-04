@@ -14,6 +14,9 @@ class ExperienceAPITest(APITestCase):
             username="owner", password="test-password", email="owner@example.com",
         )
         self.visitor = User.objects.create_user(username="visitor", password="test-password")
+        self.editor = User.objects.create_user(username="editor", password="test-password")
+        editor_group, _ = Group.objects.get_or_create(name="Editor")
+        self.editor.groups.add(editor_group)
         self.experience = Experience.objects.create(
             title="Portfolio", description="My website", category="research",
         )
@@ -32,6 +35,19 @@ class ExperienceAPITest(APITestCase):
         self.assertFalse(response.data[0]["is_starred"])
         self.assertNotIn("fields", response.data[0])
         self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
+
+    def test_get_and_options_do_not_change_experiences(self):
+        original_count = Experience.objects.count()
+        original_title = self.experience.title
+
+        self.assertEqual(self.client.get(self.list_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.options(self.list_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.options(self.detail_url).status_code, status.HTTP_200_OK)
+
+        self.experience.refresh_from_db()
+        self.assertEqual(Experience.objects.count(), original_count)
+        self.assertEqual(self.experience.title, original_title)
 
     def test_search_and_empty_results(self):
         response = self.client.get(self.list_url, {"title": "PORT"})
@@ -58,6 +74,23 @@ class ExperienceAPITest(APITestCase):
         response = self.client.post(self.list_url, self.payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Experience.objects.filter(pk=response.data["id"]).exists())
+
+    def test_editor_can_patch_but_cannot_create_or_delete(self):
+        self.client.force_authenticate(user=self.editor)
+
+        response = self.client.patch(
+            self.detail_url, {"title": "Updated by editor"}, format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.experience.refresh_from_db()
+        self.assertEqual(self.experience.title, "Updated by editor")
+
+        response = self.client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Experience.objects.count(), 1)
+        self.assertTrue(Experience.objects.filter(pk=self.experience.id).exists())
 
     def test_validation(self):
         self.client.force_authenticate(user=self.owner)
@@ -89,6 +122,8 @@ class ExperienceAPITest(APITestCase):
     def test_star_requires_login_and_toggles(self):
         self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
         self.client.force_authenticate(user=self.visitor)
+        self.assertEqual(self.client.get(self.list_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
         response = self.client.post(self.star_url)
         self.assertTrue(response.data["is_starred"])
         self.assertEqual(response.data["star_count"], 1)
@@ -106,10 +141,9 @@ class ExperienceAPITest(APITestCase):
         self.assertEqual(response.data["star_count"], 0)
         self.assertFalse(response.data["is_starred"])
 
-    def test_staff_and_editor_cannot_manage_tutorial_experiences(self):
+    def test_staff_without_editor_group_cannot_update_experiences(self):
         self.visitor.is_staff = True
         self.visitor.save()
-        self.visitor.groups.add(Group.objects.create(name="Editor"))
         self.client.force_authenticate(user=self.visitor)
         response = self.client.patch(self.detail_url, {"title": "Changed"}, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
