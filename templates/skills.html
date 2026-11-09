@@ -29,7 +29,7 @@
             <form id="skill-search-form" class="skill-search">
                     <input type="search"
                            id="search-input"
-                           name="title"
+                           name="name"
                            value="{{ name_query }}"
                            placeholder="Cari berdasarkan nama skill"
                            class="skill-search__input"
@@ -52,75 +52,8 @@
                     <p>Belum ada skill yang ditambahkan atau ditemukan.</p>
                 </div>
 
-                <!-- Skill Grid -->
+                <!-- Semua skill ditampilkan bersama dalam satu grid. -->
                 <div id="grid" class="experience-grid skill-grid hide"></div>
-            <hr>
-            <div class="skills-container-grid">
-                <div class="skills-group hard-skills">
-                    <h2>Hard Skills</h2>
-                    <!-- <div class="skill-cards-grid"> -->
-                        <div id="hard-skills-grid" class="skill-cards-grid"></div>
-                        <!-- {% for skill in skills %}
-                            <div class="skill-card">
-                                <h3>{{ skill.name }}</h3>
-                                <div class="skill-card-details">
-                                    <p class="skill-desc">{{ skill.description }}</p>
-                                    <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
-                                    <p class="skill-cat">{{ skill.category }}</p>
-                                    <div class="skill-card-actions">
-                                        <div class="skill-actions"> -->
-                                            <!-- star tetap visible untuk any user, untuk user yang belum log in akan diarahkan untuk login -->
-                                            <!-- {% include "components/skill_star.html" with skill=skill %}
-                                            {% if user.is_superuser %}
-                                                {% include "components/skill_delete_modal.html" with skill=skill %}
-                                            {% endif %}
-                                            {% if user.is_superuser or is_editor %}
-                                                <div class="button update-skill">
-                                                    <a href="{% url 'main:update_skill' skill.id %}">Edit</a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p class="empty-state">Belum ada skill yang ditambahkan</p>
-                        {% endfor %} -->
-                    <!-- </div> -->
-                </div>
-                <!-- <div class="skills-group soft-skills">
-                    <h2>Soft Skills</h2>
-                    <div class="skill-cards-grid">
-                        {% for skill in soft_skills %}
-                            <div class="skill-card">
-                                <h3>{{ skill.name }}</h3>
-                                <div class="skill-card-details">
-                                    <p class="skill-desc">{{ skill.description }}</p>
-                                    <p class="skill-proficiency">Proficiency: {{ skill.proficiency }}/10</p>
-                                    <div class="skill-card-actions">
-                                        <div class="skill-actions">
-                                            {% if skill.skill_url %}
-                                                <a href="{{ skill.skill_url }}" class="button">Lihat Skill</a>
-                                            {% endif %}
-                                            {% include "components/skill_star.html" with skill=skill %}
-                                            {% if user.is_superuser %}
-                                                {% include "components/skill_delete_modal.html" with skill=skill %}
-                                            {% endif %}
-                                            {% if user.is_superuser or is_editor %}
-                                                <div class="button update-skill">
-                                                    <a href="{% url 'main:update_skill' skill.id %}">Edit</a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p class="empty-state">Belum ada skill yang ditambahkan</p>
-                        {% endfor %}
-                    </div>
-                </div> -->
-            </div>
 
         </div>
     </section>
@@ -140,7 +73,7 @@
     const loadingState = document.getElementById('loading');
     const errorState = document.getElementById('error');
     const emptyState = document.getElementById('empty');
-    const gridContainer = document.getElementById('hard-skills-grid');
+    const gridContainer = document.getElementById('grid');
     const searchForm = document.getElementById('skill-search-form');
     const searchInput = document.getElementById('search-input');
 
@@ -242,7 +175,7 @@
         try {
             displayPageSection({ showLoading: true });
             
-            const url = searchQuery ? `${BASE_SKILLS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_SKILLS_ENDPOINT;
+            const url = searchQuery ? `${BASE_SKILLS_ENDPOINT}?name=${encodeURIComponent(searchQuery)}` : BASE_SKILLS_ENDPOINT;
             
             const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' },
