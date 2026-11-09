@@ -58,7 +58,7 @@ class Skills(models.Model):
         ]
     )
     starred_by = models.ManyToManyField(
-        User, related_name="starred_projects", blank=True
+        User, related_name="starred_skills", blank=True
     )
 
     def __str__(self):

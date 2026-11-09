@@ -13,7 +13,7 @@
         <div class="container">
             <p class="skills-kicker">My Skills</p>
             <div class="skills-header">
-                <button class="button button-secondary" onclick="showToast('Notifikasi Sistem', 'Skill berhasil dimuat dengan baik!', 'success')">
+                <button class="button button-secondary hide" onclick="showToast('Notifikasi Sistem', 'Skill berhasil dimuat dengan baik!', 'success')">
                     Test Toast Notifikasi
                 </button>
                 <h1>Skills</h1>
@@ -35,25 +35,25 @@
                            class="skill-search__input"
                            aria-label="Cari berdasarkan nama skill">
                     <button type="submit" class="button">Cari</button>
-                </form>
+            </form>
 
-                <!-- Loading State -->
-                <div id="loading" class="empty-state hide">
-                    <p>Memuat skills...</p>
-                </div>
+            <!-- Loading State -->
+            <div id="loading" class="empty-state hide">
+                <p>Memuat skills...</p>
+            </div>
 
-                <!-- Error State -->
-                <div id="error" class="empty-state hide">
-                    <p>Gagal memuat data skills. Silakan coba lagi.</p>
-                </div>
+            <!-- Error State -->
+            <div id="error" class="empty-state hide">
+                <p>Gagal memuat data skills. Silakan coba lagi.</p>
+            </div>
 
-                <!-- Empty State -->
-                <div id="empty" class="empty-state hide">
-                    <p>Belum ada skill yang ditambahkan atau ditemukan.</p>
-                </div>
+            <!-- Empty State -->
+            <div id="empty" class="empty-state hide">
+                <p>Belum ada skill yang ditambahkan atau ditemukan.</p>
+            </div>
 
-                <!-- Semua skill ditampilkan bersama dalam satu grid. -->
-                <div id="grid" class="experience-grid skill-grid hide"></div>
+            <!-- Semua skill ditampilkan bersama dalam satu grid. -->
+            <div id="grid" class="experience-grid skill-grid hide"></div>
 
         </div>
     </section>

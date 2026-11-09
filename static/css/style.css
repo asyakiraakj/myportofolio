@@ -407,11 +407,11 @@ a {
         justify-content: center;
     }
 
-    .skills-search {
+    .skill-search {
         flex-direction: column;
     }
 
-    .skills-search .button {
+    .skill-search .button {
         width: 100%;
     }
 
@@ -657,10 +657,11 @@ a {
     line-height: 1;
 }
 
-.skills-search {
+.skill-search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
+    width: 100%;
 }
 
 .skills-search__input {
