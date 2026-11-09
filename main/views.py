@@ -57,6 +57,7 @@ def show_skills(request):
         "name": "Syakira",
         "name_query": name_query,
         "form": SkillsForm(),
+        "is_editor": request.user.is_authenticated and request.user.groups.filter(name="Editor").exists(),
     }
     return render(request, "skills.html", context)
 
