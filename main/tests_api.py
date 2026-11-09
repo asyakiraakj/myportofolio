@@ -96,6 +96,7 @@ class ExperienceAPITest(APITestCase):
         for changes, field in [
             ({"title": "   "}, "title"),
             ({"title": '<img src="x" onerror="alert(1)">'}, "title"),
+            ({"description": "<p> </p>"}, "description"),
             ({"thumbnail": "javascript:alert(1)"}, "thumbnail"),
         ]:
             response = self.client.post(self.list_url, {**self.payload, **changes}, format="json")
@@ -132,11 +133,14 @@ class ExperienceAPITest(APITestCase):
 
     def test_computed_fields_are_read_only(self):
         self.client.force_authenticate(user=self.owner)
+        forged_id = uuid.uuid4()
         response = self.client.post(self.list_url, {
-            **self.payload, "star_count": 99, "is_starred": True,
+            **self.payload, "id": str(forged_id),
+            "star_count": 99, "is_starred": True,
             "starred_by_names": "forged", "starred_by": [self.visitor.id],
         }, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(response.data["id"], str(forged_id))
         self.assertEqual(response.data["star_count"], 0)
         self.assertFalse(response.data["is_starred"])
 
@@ -198,6 +202,19 @@ class SkillsAPITest(APITestCase):
         self.assertFalse(response.data[0]["is_starred"])
         self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
 
+    def test_get_and_options_do_not_change_skills(self):
+        original_count = Skills.objects.count()
+        original_name = self.skill.name
+
+        self.assertEqual(self.client.get(self.list_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.get(self.detail_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.options(self.list_url).status_code, status.HTTP_200_OK)
+        self.assertEqual(self.client.options(self.detail_url).status_code, status.HTTP_200_OK)
+
+        self.skill.refresh_from_db()
+        self.assertEqual(Skills.objects.count(), original_count)
+        self.assertEqual(self.skill.name, original_name)
+
     def test_search_and_empty_results(self):
         self.assertEqual(len(self.client.get(self.list_url, {"name": "DJAN"}).data), 1)
         self.assertEqual(self.client.get(self.list_url, {"name": "nope"}).data, [])
@@ -243,12 +260,20 @@ class SkillsAPITest(APITestCase):
             ({"proficiency": 0}, "proficiency"),
             ({"proficiency": 11}, "proficiency"),
             ({"type": "invalid"}, "type"),
-            ({"category": "invalid"}, "category"),
+            ({"category": "<b>invalid</b>"}, "category"),
         ]:
             response = self.client.post(self.list_url, {**self.payload, **changes}, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, changes)
             self.assertIn(field, response.data)
         self.assertEqual(Skills.objects.count(), 1)
+
+    def test_category_html_is_stripped_before_save(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post(
+            self.list_url, {**self.payload, "category": "<b>design</b>"}, format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["category"], "design")
 
     def test_star_requires_login_and_toggles(self):
         self.assertEqual(self.client.post(self.star_url).status_code, status.HTTP_403_FORBIDDEN)
@@ -267,11 +292,14 @@ class SkillsAPITest(APITestCase):
 
     def test_computed_fields_are_read_only(self):
         self.client.force_authenticate(user=self.owner)
+        forged_id = uuid.uuid4()
         response = self.client.post(self.list_url, {
-            **self.payload, "star_count": 99, "is_starred": True,
+            **self.payload, "id": str(forged_id),
+            "star_count": 99, "is_starred": True,
             "starred_by_names": "forged", "starred_by": [self.visitor.id],
         }, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(response.data["id"], str(forged_id))
         self.assertEqual(response.data["star_count"], 0)
         self.assertFalse(response.data["is_starred"])
 
@@ -280,3 +308,24 @@ class SkillsAPITest(APITestCase):
         self.visitor.save()
         self.client.force_authenticate(user=self.visitor)
         self.assertEqual(self.client.patch(self.detail_url, {"name": "X"}, format="json").status_code, 403)
+
+    def test_wrong_method(self):
+        self.client.force_authenticate(user=self.owner)
+        self.assertEqual(
+            self.client.delete(self.list_url).status_code,
+            status.HTTP_405_METHOD_NOT_ALLOWED,
+        )
+
+    def test_session_write_requires_and_accepts_csrf(self):
+        client = APIClient(enforce_csrf_checks=True)
+        self.assertTrue(client.login(username="owner", password="test-password"))
+        response = client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        page = client.get(reverse("main:show_skills"))
+        self.assertEqual(page.status_code, status.HTTP_200_OK)
+        token = client.cookies["csrftoken"].value
+        response = client.post(
+            self.list_url, self.payload, format="json", HTTP_X_CSRFTOKEN=token,
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
