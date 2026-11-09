@@ -27,7 +27,10 @@ class ExperienceSerializer(serializers.ModelSerializer):
         return value
 
     def validate_description(self, value):
-        return strip_tags(value)
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Description cannot be empty.")
+        return value
 
     def validate_category(self, value):
         return strip_tags(value)
@@ -47,6 +50,9 @@ class ExperienceSerializer(serializers.ModelSerializer):
 from main.models import Experience, Skills
 
 class SkillsSerializer(serializers.ModelSerializer):
+    # Use a plain field so validate_category can strip markup before the
+    # model's generated ChoiceField rejects the raw value.
+    category = serializers.CharField(max_length=50)
     star_count = serializers.SerializerMethodField()
     is_starred = serializers.SerializerMethodField()
     starred_by_names = serializers.SerializerMethodField()
@@ -78,7 +84,11 @@ class SkillsSerializer(serializers.ModelSerializer):
         return strip_tags(value).strip()
 
     def validate_category(self, value):
-        return strip_tags(value).strip()
+        value = strip_tags(value).strip()
+        valid_categories = {choice[0] for choice in Skills.CATEGORY_CHOICES}
+        if value not in valid_categories:
+            raise serializers.ValidationError("Select a valid choice.")
+        return value
 
     def get_star_count(self, obj):
         return obj.starred_by.count()

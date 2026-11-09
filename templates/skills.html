@@ -66,6 +66,7 @@
         {% include "components/skill_form_update_modal.html" %}
     {% endif %}
 
+    {% csrf_token %}
     <script>
     // Konfigurasi
     const BASE_SKILLS_ENDPOINT = "{% url 'api:skills-list' %}";
