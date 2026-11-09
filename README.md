@@ -61,3 +61,38 @@ Saya menggunakan bantuan generative AI yaitu Gemini.<br>
 [Lampiran AI chat log Tugas 5](https://share.gemini.google/PxOBsvTnaVs8)
 <br>**Analisis Kekurangan AI**<br>
 Pada awalnya experience cards saya tidak ter render sama sekali. Ketika saya mencoba menanyakan kepada AI penyebabnya apa, dia tidak menemukan kesalahannya dimana atau perbaikan yang dia sebutkan belum sepenuhnya menyelesaikan masalah tersebut. Setelah itu saya coba perhatikan kembali dan saya curiga masalahnya terdapat di *url path*, lalu saya *suggest* apakah mungkin masalahnya berada di *url path* dan ternyata benar.
+
+### Tugas 6
+**1. Jelaskan apa yang dimaksud dengan REST dan mengapa mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful! Jelaskan pula perbedaan PUT dan PATCH beserta contoh kapan masing-masing sebaiknya digunakan!<br>**
+REST (Representational State Transfer) adalah arsitektur untuk merancang web API. Di REST API, data diperlakukan sebagai resource. URL menunjuk ke data, misalnya /api/v1/skills/ untuk kumpulan skill dan /api/v1/skills/<uuid>/ untuk satu skill. Selain itu, HTTP method menyatakan tindakan. GET untuk membaca, POST untuk membuat, PUT/PATCH untuk mengubah, DELETE untuk menghapus. Jadi tindakan tidak perlu ditulis di URL (contoh lama: /projects/add-ajax/). Selain itu, di RESTful API, klien dan server bertukar representasi data, yaitu JSON, bukan objek Python atau baris database.<br>
+Mengapa JSON saja belum cukup disebut RESTful? Karena yang menentukan RESTful atau tidak adalah cara API itu diatur, bukan format datanya. Endpoint buatan sendiri seperti /skills/add-ajax/ memang mengembalikan JSON, tetapi tindakannya ditulis di URL dan memakai method yang tidak sesuai. Jadi API itu belum bisa disebut RESTful.<br>
+Perbedaan PUT dan PATCH: PUT mengirmkan representasi pengganti, semua field wajib dikirim. Sedangkan PATCH hanya mengirimkan field yang ingin diubah
+
+**2. Jelaskan peran serializer pada Django REST Framework! Apa keuntungannya dibandingkan merakit dictionary secara manual dengan JsonResponse seperti pada Tutorial 05?**<br>
+Peran serializer:
+- Serializaition (GET): mengubah objek model menjadi tipe data Python yang bisa dirender menjadi JSON.
+- Deserialization (POST/PATCH): mengubah input dari klien menjadi data yang sudah divalidasi dan siap disimpan (`.is_valid()` lalu `.save()`).
+Selain itu, serializer juga menentukan field apa saja yang dikirim dan field mana yang hanya bisa dibaca. Adapun keuntungan dibanding menggunakan `JsonResponse` manual di antaranya:
+- Tidak perlu merakit dictionary satu per satu dalam loop.
+- Validasi input ada di satu tempat (`validate_title`, validasi URL otomatis dari model)
+- ModelSerializer sudah menyediakan `create()` dan `update()`.
+- Field hasil perhitungan (`star_count`, `is_starred`) mudah dibuat dan tidak bisa diisi klien.
+- Tidak mengulang pola yang sama ketika Model atau section lain juga butuh API.
+
+**3. Jelaskan perbedaan autentikasi dan otorisasi pada Django REST Framework! Mengapa hak akses harus diperiksa dengan permission class di server, bukan hanya dengan menyembunyikan tombol di template?**<br>
+Autentikasi berkaitan dengan *role* user atau "siapa". Di DRF, *authentication class* (di sini `SessionAuthentication`) mengisi `request.user`. Sedangkan otorisasi berkaitan dengan apa saja yang dapat dilakukan oleh user dengan role terstentu. Di DRF, permission class (di sini `IsPortfolioOwnerOrReadOnly`) memutuskan apakah request boleh diteruskan.
+Hak akses harus diperiksa dengan permission class karena menyembunyikan tombol hanya mengatur tampilan, bukan izin sesungguhnya. Orang tetap bisa mengirim request langsung ke API, misalnya lewat Console browser atau Browsable API, tanpa memakai tombol itu.<br>
+
+**4. Jelaskan mengapa permintaan yang mengubah data tetap memerlukan token CSRF ketika API memakai SessionAuthentication! Mengapa test yang memakai force_authenticate tidak cukup untuk membuktikan bahwa perlindungan CSRF berjalan?**<br>
+Token CSRF tetap diperlukan karena `SessionAuthentication` mengenali pengguna lewat cookie session, dan browser mengirim cookie itu secara otomatis. Karena itu, untuk akun yang terautentikasi lewat session, request yang mengubah data harus menyertakan token CSRF. Jika token tidak ada atau salah, hasilnya 403. <br>`force_authenticate` saja tidak cukup karena tidak menguji proses login maupun CSRF. Karena itu kita perlu menambah dua test khusus memakai `APIClient(enforce_csrf_checks=True)` dan `.login()` yang membuat session sungguhan:
+- POST tanpa token CSRF harus ditolak (403) dan data tidak tersimpan.
+- POST dengan token CSRF (diambil dari Browsable API) harus berhasil (201).
+<br>
+#### AI Disclosure
+Saya menggunakan Generative AI yaitu Claude dan ChatGPT (Codex)
+AI Chat Log:
+- https://chatgpt.com/s/cx_6af1c9aaada08191a37004ad351317ed
+- https://chatgpt.com/s/cx_6af1ca445fcc8191b865eb84b8272092
+- https://claude.ai/share/e70637d8-2b86-4169-aab2-b385c6f388c8
+**Analisis Kekurangan AI**<br>
+AI sering kali memberikan solusi yang cukup rumit dan banyak menambah fungsi atau kode yang kurang penting atau redundan sehingga harus diperbaiki dan disesuaikan lagi.

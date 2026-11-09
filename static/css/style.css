@@ -309,38 +309,6 @@ a {
     font-family:  "Space Grotesk", -apple-system, sans-serif;;
 }
 
-.skills-section hr {
-    color: var(--separator);
-}
-
-.skills-container-grid {
-    display: grid;
-    grid-template-areas: "hard soft";
-    grid-template-columns: 1fr 1fr;
-
-    padding-top: 1rem;
-}
-.hard-skills {
-    grid-area: hard;
-}
-.soft-skills {
-    grid-area: soft;
-}
-
-.skills-section-grid h2 { /* Hard/Soft Heading */
-    padding: 0;
-}
-
-.skills-group { /* Hard/Soft Skill Container */
-    display: grid;
-    grid-template-rows: auto 1fr;
-}
-
-.skills-group h2 {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
-    margin-bottom: 0.2rem;
-}
-
 .skills-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -429,15 +397,6 @@ a {
         padding-top: 0px;
     }
 
-    .skills-container-grid {
-        display: grid;
-        grid-template-areas: 
-        "hard"
-        "soft";
-        grid-template-rows: 1fr 1fr;
-        grid-template-columns: none;
-    }
-
     .skills-header {
         align-items: flex-start;
         flex-direction: column;
@@ -448,11 +407,11 @@ a {
         justify-content: center;
     }
 
-    .skills-search {
+    .skill-search {
         flex-direction: column;
     }
 
-    .skills-search .button {
+    .skill-search .button {
         width: 100%;
     }
 
@@ -698,10 +657,11 @@ a {
     line-height: 1;
 }
 
-.skills-search {
+.skill-search {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
+    width: 100%;
 }
 
 .skills-search__input {

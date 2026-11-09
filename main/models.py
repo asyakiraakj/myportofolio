@@ -49,7 +49,7 @@ class Skills(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=10, choices=SKILLS_TYPES, default='hard')
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='others')
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
     description = models.TextField()
     proficiency = models.IntegerField(
         validators=[
@@ -58,7 +58,7 @@ class Skills(models.Model):
         ]
     )
     starred_by = models.ManyToManyField(
-        User, related_name="starred_projects", blank=True
+        User, related_name="starred_skills", blank=True
     )
 
     def __str__(self):

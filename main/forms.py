@@ -37,14 +37,10 @@ class SkillsForm(ModelForm):
                     "maxlength": 100,
                 }
             ),
-            "category": TextInput(
+            "category": Select(),
+            "description": Textarea(
                 attrs={
-                    "placeholder": "Design, Programming, Multimedia Production, Others",
-                }
-            ),
-            "category": Textarea(
-                attrs={
-                    "placeholder": "deskripsi",
+                    "placeholder": "Deskripsi skill",
                 }
             ),
             "proficiency": TextInput(
